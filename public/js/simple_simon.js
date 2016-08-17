@@ -10,12 +10,18 @@ $( document ).ready(function() {
 	var $green = $('#green');
 	var $yellow = $('#yellow');
 	var $btn = $('#startGame');
-	var $mesage = $('#message');
-	var $round = $('currentRound');
+	var $message = $('#message');
+	var $round = $('#currentRound');
+	var $colors = $('.color');
 	var sequenceOfColors = {};
 	var count = 1;
 	var endGame = false;
 	//-----------------//end variables//--------------------------
+	//function that clears the buttons
+	function clearClicked() {
+		console.log("clear clicked");
+		//use a each function to clear all the divs to opacity = 1;
+	}
 	//function that checks the user input
 	function checkClicked(){
 		//it should probably have a timer between divs pressed
@@ -24,6 +30,11 @@ $( document ).ready(function() {
 	//function that light the sequence that is randomly generated
 	function lightSequence(){
 		for(var i=0; i < count; i++){
+			//we need a pause so the user has time to see, should it be here???
+			//maybe create a function that takes some time and also allows me to cotrol the time
+			//later on with the count that counts the rounds when is high and minimize the time for the user
+			//to see
+
 			//takes whatever color was randomed in the sequence
 			switch(sequenceOfColors[i]){
 				/*
@@ -65,10 +76,15 @@ $( document ).ready(function() {
 	}
 	//function that the program uses for creating the random order of color
 	function gameStart(){
+		$btn.hide();
+		$message.text('Watch the sequence.');
+		$round.text('Current round'+count);
 		createSequence();
 	}
 	//function that takes the user input and compares it with the sequence to see if its right. 
 	function gameContinue(){
+		clearClicked();//function that brings the opacity so square is not clicked
+		//change the text here
 		checkClicked();//function that checks the user input 
 		//if user misses //this probably has to go inside check clicked
 		endGame = true;//when the user misses a color in the order
@@ -79,5 +95,4 @@ $( document ).ready(function() {
 		gameStart();
 		gameContinue();
 	});
-
 });
