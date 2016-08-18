@@ -15,14 +15,15 @@ $(document).ready(function() {
 	var $round = $('#currentRound');
 	var $colors = $('.color');
 	//*jquery variables
-	var sequenceOfColors = {};//array that will hold the things in order
-	var count = 1;//counts the number of rounds and controls the array depending on round level
-	var endGame = false;//variable shouold test whether or not the user loses
+	var sequenceOfColors = {}; //array that will hold the things in order
+	var count = 1; //counts the number of rounds and controls the array depending on round level
+	var endGame = false; //variable shouold test whether or not the user loses
 	var timeBetweenColors = 1000; //1 second between colors selected by the game.(interval)
 	var lightingColor = 1000; //1 second between seeing a color light up and go off(timeout)
 	var intervalGame; //interval that takes care of the timming between color selection from the game.
-	var timeOutBetweenDisplayColors;//timeOutvariable for the time between colors picked
-	var intervalUser;//timeout variable for the user to input the order
+	var timeOutBetweenDisplayColors; //timeOutvariable for the time between colors picked
+	var timeOutvalUser = 1000; //timeout variable for the user to input the order is gonna be calculated depending on the round *count
+	var timeOutUser;
 	//-----------------//end variables//--------------------------
 	//function that clears the buttons
 	function clearClicked() {
@@ -32,6 +33,24 @@ $(document).ready(function() {
 	//function that checks the user input
 	function checkClicked() {
 		//it should probably have a timer between divs pressed
+		//function local that waits one second and then gives the turn to the user to input
+		var localTimeOutWait1Second = setTimeout(function() {
+			//change the text so the user knows is his turn
+			$message.text('Repeat the sequuence as you just saw.');
+			$round.text('Current round' + count);
+			//time for the user to input???here????
+
+
+			//this function will be the end of the game if the user takes too long to press the colors
+			// timeOutUser = setTimeout(function() {
+			// 		alert('time is UP!');
+			// 		$message.text('GAME OVER!');
+			// 		endGame = true;//end the game condition
+			// 		clearTimeout(timeOutUser);
+			// 	},
+			// 	timeOutvalUser * count); //times count to increase the time depending on the round Ex round 5 = 5 seconds
+		}, 1000);
+
 		//it has to check that the order matches too.
 	}
 	//function that light the sequence that is randomly generated
@@ -41,6 +60,7 @@ $(document).ready(function() {
 			//maybe create a function that takes some time and also allows me to cotrol the time
 			//later on with the count that counts the rounds when is high and minimize the time for the user
 			//to see
+			//console.log(sequenceOfColors[i]);
 			timeOutBetweenDisplayColors = setTimeout(function() {
 				//takes whatever color was randomed in the sequence
 				switch (sequenceOfColors[i]) {
@@ -71,7 +91,8 @@ $(document).ready(function() {
 
 
 			}, lightingColor);
-			clearClicked();
+
+			//clearClicked();
 		}
 	}
 	//function that creates the random sequence adding one at the time
@@ -92,7 +113,7 @@ $(document).ready(function() {
 		$message.text('Watch the sequence.');
 		$round.text('Current round' + count);
 		createSequence();
-
+		gameContinue();//it shouold control the end if the game and also accept and check user input
 		//***test
 		if (count > 5) {
 			console.log("finishing interval");
