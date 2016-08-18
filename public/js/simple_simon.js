@@ -14,8 +14,10 @@ $(document).ready(function() {
 	var $message = $('#message');
 	var $round = $('#currentRound');
 	var $colors = $('.color');
+	var $divColors = $('.divColors');
 	//*jquery variables
-	var sequenceOfColors = {}; //array that will hold the things in order
+	var maxLevel = 50;//level at which the sequence is pre-generated
+	var sequenceOfColors = []; //array that will hold the things in order
 	var count = 1; //counts the number of rounds and controls the array depending on round level
 	var endGame = false; //variable shouold test whether or not the user loses
 	var timeBetweenColors = 1000; //1 second between colors selected by the game.(interval)
@@ -26,9 +28,14 @@ $(document).ready(function() {
 	var timeOutUser;
 	//-----------------//end variables//--------------------------
 	//function that clears the buttons
-	function clearClicked() {
+	function clearClicked(color,delay) {
 		//console.log("clearing right away clicked");
-		$colors.css('opacity', '1');
+		// $colors.css('opacity', '1');
+		$(color).animate({
+			opacity : 1
+		}, delay).animate({
+			opacity: 0.25
+		}, delay);
 	}
 	//function that checks the user input
 	function checkClicked() {
@@ -36,11 +43,19 @@ $(document).ready(function() {
 		//function local that waits one second and then gives the turn to the user to input
 		var localTimeOutWait1Second = setTimeout(function() {
 			//change the text so the user knows is his turn
-			$message.text('Repeat the sequuence as you just saw.');
+			$message.text('Repeat the sequence as you just saw.');
 			$round.text('Current round' + count);
-			//time for the user to input???here????
+			
+			
+			$divColors.on('click', function(e){
+				console.log("clicked");
+			});
+			$divColors.off('click');
+			//if user misses 
+			//clearInterval(intervalGame);
+			//clearClicked();
 
-
+			/************////implement later max time out for a round********// 
 			//this function will be the end of the game if the user takes too long to press the colors
 			// timeOutUser = setTimeout(function() {
 			// 		alert('time is UP!');
@@ -56,11 +71,6 @@ $(document).ready(function() {
 	//function that light the sequence that is randomly generated
 	function lightSequence() {
 		for (var i = 0; i < count; i++) {
-			//we need a pause so the user has time to see, should it be here???
-			//maybe create a function that takes some time and also allows me to cotrol the time
-			//later on with the count that counts the rounds when is high and minimize the time for the user
-			//to see
-			//console.log(sequenceOfColors[i]);
 			timeOutBetweenDisplayColors = setTimeout(function() {
 				//takes whatever color was randomed in the sequence
 				switch (sequenceOfColors[i]) {
@@ -72,54 +82,44 @@ $(document).ready(function() {
 					*/
 					//probably need to add a pause between each pressed to give the user time.
 					case 1:
-						$red.css('opacity', '0.4');
+						//$red.css('opacity', '0.4');
+						clearClicked('#red', 500);
 						break;
 					case 2:
-						$blue.css('opacity', '0.4');
+						// $blue.css('opacity', '0.4');
+						clearClicked('#blue', 500);
 						break;
 					case 3:
-						$green.css('opacity', '0.4');
+						// $green.css('opacity', '0.4');
+						clearClicked('#green', 500);
 						break;
 					case 4:
-						$yellow.css('opacity', '0.4');
+						// $yellow.css('opacity', '0.4');
+						clearClicked('#yellow', 500);
 						break;
 					default:
-						//console.log(sequenceOfColors[i]);
+						console.log(sequenceOfColors[i]);
 						console.log("dang it default on the swtich");
 						break;
 				}
-
-
 			}, lightingColor);
-
-			//clearClicked();
+			// clearClicked();
 		}
 	}
-	//function that creates the random sequence adding one at the time
+	//function that creates the random sequence adding 100 random levels
 	function createSequence() {
-		for (var i = 0; i < count; i++) {
+		for (var i = 0; i < maxLevel; i++) {
 			var random = Math.floor(Math.random() * 4) + 1; //create a random number from 1 to 4
-			sequenceOfColors[i] = random; //save the random value in the array.
+			sequenceOfColors.push(random); //save the random value in the array.
 		}
-		lightSequence(); //light the sequence just generated
-
-
-		//needs to be at the bottom
-		count++; //count will have 1 plus every time craeteSequence method is called.
 	}
 	//function that the program uses for creating the random order of color
-	function gameStart() {
-		$btn.hide();
+	function gameStart() {	
 		$message.text('Watch the sequence.');
 		$round.text('Current round' + count);
-		createSequence();
-		gameContinue();//it shouold control the end if the game and also accept and check user input
-		//***test
-		if (count > 5) {
-			console.log("finishing interval");
-			clearInterval(intervalGame);
-			return;
-		}
+		lightSequence(); //light the sequence just generated
+
+		//gameContinue();
 	}
 	//function that takes the user input and compares it with the sequence to see if its right. 
 	function gameContinue() {
@@ -127,11 +127,12 @@ $(document).ready(function() {
 		//change the text here
 		checkClicked(); //function that checks the user input 
 		//if user misses //this probably has to go inside check clicked
-		endGame = true; //when the user misses a color in the order
+		// endGame = true; //when the user misses a color in the order
 	}
 	//click for the button
 	$btn.click(function() {
-		//while end game = false keep playing
+		$btn.hide();
+		createSequence();//call function to create the sequence just once
 		intervalGame = setInterval(gameStart, timeBetweenColors); //interval that controls the game start and the machine part of the game
 		//timeOutUser = setTimeout(gameContinue, timeUserInput);//time out that will give th
 	});
