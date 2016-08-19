@@ -1,3 +1,7 @@
+.container{
+	width: 230px;
+	height: 300px;
+}
 #red{
 	height: 100px;
 	width: 100px;
@@ -19,6 +23,9 @@
 	background-color: blue;
 }
 
+.divColors{
+	float:left;
+}
 /*.center-block {
    margin-left:auto;
    margin-right:auto;
