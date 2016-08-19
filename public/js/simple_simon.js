@@ -10,7 +10,7 @@ $(document).ready(function() {
 	var $message = $('#message');
 	var $round = $('#currentRound');
 	var $colors = $('.color');
-	var $divColors = $('.divColors');
+	var $divColors = $('#divColors');
 	//*jquery variables
 	var maxLevel = 50; //level at which the sequence is pre-generated
 	var sequenceOfColors = []; //array that will hold the things in order
@@ -25,7 +25,7 @@ $(document).ready(function() {
 	var timeOutUser;
 	//-----------------//end variables//--------------------------
 	//function that clears the buttons
-	function clearClicked(color, delay) {
+	function lightColor(color, delay) {
 		$(color).animate({
 			opacity: .25
 		}, delay).animate({
@@ -34,38 +34,71 @@ $(document).ready(function() {
 	}
 	//function that checks the user input
 	function checkClicked() {
+		$colors.click(function(e){
+			// console.log($(this).attr('value'));
+			var currentValue = $(this).attr('value');
+			var lightThisOne = "#" + $(this).attr('id');
+			lightColor(lightThisOne, 300);
+
+			console.log("round is "+round);
+			console.log("coutn is "+count);
+			if(currentValue == sequenceOfColors[round-1]){//if the value selected  matches color displayed
+				console.log("inside first if");
+				console.log("you clicked right");
+				if(count<round-1){//increment the number of times run by 1, first time should be run just once count =0 round=1
+					console.log("inside condition repeat");
+					count++;
+					checkClicked();//run again
+				}
+				else{
+					console.log("");
+					//round++;//advance
+					gameStart();//keep playing
+				}
+			}
+			else{
+				console.log("end game");
+				//end the game
+			}
+		});
 	}
 	//function that light the sequence that is randomly generated
 	function lightSequence() {
 		setTimeout(function(){ 
-			switch (sequenceOfColors[count]) {
+			console.log(round-1);
+			var index = round-1;
+			switch (sequenceOfColors[index]) {
 				//probably need to add a pause between each pressed to give the user time.
 				case 1:
-					clearClicked('#red', 300);
+					lightColor('#red', 300);
 					console.log("red");
 					break;
 				case 2:
-					clearClicked('#blue', 300);
+					lightColor('#blue', 300);
 					console.log("blue");					
 					break;
 				case 3:
-					clearClicked('#green', 300);
+					lightColor('#green', 300);
 					console.log("green");
 					break;
 				case 4:
-					clearClicked('#yellow', 300);
+					lightColor('#yellow', 300);
 					console.log("yellow");
 					break;
 				default:
 					console.log("dang it default on the swtich");
 					break;
 			}
+			//change index count*********///
+			index++;
 			count++;
-			if(count<=5){
+			//console.log("round is: "+round+" count is : "+count);
+			if(count<round){
 				gameStart();
 			}
 			else{
-				console.log("program ends");
+				gameContinue();
+
 			}
 			
 		}, 1000);
@@ -81,13 +114,20 @@ $(document).ready(function() {
 	//function that the program uses for creating the random order of color
 	function gameStart() {
 		$message.text('Watch the sequence.');
-		$round.text('Current round' + count);
+		$round.text('Current round: ' + round);
 		lightSequence(); //light the sequence just generated
 		
+		//count=0;//???
 	}
 	//function that takes the user input and compares it with the sequence to see if its right. 
 	function gameContinue() {
+		$message.text('Repeat what you just saw.');
+		$round.text('Current round: ' + round);
+		checkClicked();//checks the user click
 		
+		//console.log(round-1+" we might want this value to be index");
+		count=0;
+
 	}
 	//click for the button
 	$btn.click(function() {
