@@ -23,7 +23,18 @@ $(document).ready(function() {
 	var timeOutBetweenDisplayColors; //timeOutvariable for the time between colors picked
 	var timeOutvalUser = 1000; //timeout variable for the user to input the order is gonna be calculated depending on the round *count
 	var timeOutUser;
+
+	//test variables
+	var index = round-1;
+	var times = 0;
 	//-----------------//end variables//--------------------------
+
+
+	//function that will run something an x number of times incrementing by one
+	function runXtimes(){
+		times++;
+		return times;//returns 0 first time its called then it will be 1 and so on.
+	}
 	//function that clears the buttons
 	function lightColor(color, delay) {
 		$(color).animate({
@@ -42,17 +53,27 @@ $(document).ready(function() {
 
 			console.log("round is "+round);
 			console.log("coutn is "+count);
-			if(currentValue == sequenceOfColors[round-1]){//if the value selected  matches color displayed
-				console.log("inside first if");
+			index = round-1;
+			
+			if(currentValue == sequenceOfColors[index]){//if the value selected  matches color displayed
+				index++;//index incrementing moved here.
 				console.log("you clicked right");
-				if(count<round-1){//increment the number of times run by 1, first time should be run just once count =0 round=1
+				//***********Condition that I need to fix so the program runs 1 time then 2 times and so on
+				//may be add a settimeout to give the user some time to enter
+				//and use the time out.
+				//setTimeout()
+
+				if(count < round-1){//runxTimes will be 1 so we dont run this the first time..  next time once, and so on.
+					//setTimeout(function(){//time out here didnt work try outside the click function.
+						//we just need to fix the waiting time between the user clicks 
+					checkClicked();//run again
+					
+					//},3000);
 					console.log("inside condition repeat");
 					count++;
-					checkClicked();//run again
 				}
 				else{
-					console.log("");
-					//round++;//advance
+					round++;//advance//leave this one increment round at the end.
 					gameStart();//keep playing
 				}
 			}
@@ -65,8 +86,8 @@ $(document).ready(function() {
 	//function that light the sequence that is randomly generated
 	function lightSequence() {
 		setTimeout(function(){ 
-			console.log(round-1);
-			var index = round-1;
+			
+			console.log(index+" index");
 			switch (sequenceOfColors[index]) {
 				//probably need to add a pause between each pressed to give the user time.
 				case 1:
@@ -90,15 +111,16 @@ $(document).ready(function() {
 					break;
 			}
 			//change index count*********///
-			index++;
+			index++; //we need the index to keep changing so the next rounds the array is traversed
 			count++;
-			//console.log("round is: "+round+" count is : "+count);
+			console.log("round is: "+round+" count is : "+count);
 			if(count<round){
 				gameStart();
+				console.log("this needs to run "+ round +" times. running gameStart again");
 			}
 			else{
+				console.log("continuing game for user input");
 				gameContinue();
-
 			}
 			
 		}, 1000);
@@ -124,9 +146,7 @@ $(document).ready(function() {
 		$message.text('Repeat what you just saw.');
 		$round.text('Current round: ' + round);
 		checkClicked();//checks the user click
-		
-		//console.log(round-1+" we might want this value to be index");
-		count=0;
+		count=0; //restarting to 0 to keep following the sequence
 
 	}
 	//click for the button
