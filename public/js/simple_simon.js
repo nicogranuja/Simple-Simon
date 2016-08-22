@@ -1,4 +1,4 @@
-// $(document).ready(function() {
+$(document).ready(function() {
 	"use strict";
 	//variables for the game
 	//*jquery variables
@@ -15,29 +15,42 @@
 	var maxLevel = 50; //level at which the sequence is pre-generated
 	var sequenceOfColors = []; //array that will hold the things in order
 	var count = 0; //counts the number of rounds and controls the array depending on round level
-	var round = 1;//initial round
-	
+	var round = 1; //initial round
+
 
 	//-----------------//end variables//--------------------------
+	function startAnimation() {
+		$red.animate({
 
+		}, 1000).animate({
+
+		}, 1000);
+	}
 	//lose animation when the game ends
 	function loseAnimation() {
 		var delay = 700;
 		var localCount = 2; //will run twice the animation
 		var localInterval = setInterval(function() {
-		var audio = new Audio('Sounds/lose.mp3'); //lose audio
-		lightColor('#red', delay);
-		lightColor('#blue', delay);
-		lightColor('#yellow', delay);
-		lightColor('#green', delay);
-		$message.text('You Lose :(');
-		$round.text('In round' + round);
-		localCount--;
-		if (localCount == 0) { //after two times clear interval 
-			audio.play();
-			clearInterval(localInterval);
-		}
-	}, 1000);
+			var audio = new Audio('Sounds/lose.mp3'); //lose audio
+			lightColor('#red', delay);
+			lightColor('#blue', delay);
+			lightColor('#yellow', delay);
+			lightColor('#green', delay);
+			//changing the message and show the last round
+			$message.text('You Lose :(');
+			$round.text('In round' + round);
+			localCount--;
+			if (localCount == 0) { //after two times clear interval 
+				audio.play();//playing the lose audio
+				clearInterval(localInterval);
+				//text and show button again to restart the game
+				$btn.text('restart');
+				$btn.fadeIn();
+				$btn.click(function(){
+					location.reload();
+				});
+			}
+		}, 1000);
 
 	}
 	//function that lights the divs on and off
@@ -60,17 +73,17 @@
 			//light and play audio
 			lightColor(lightThisOne, 300);
 			audio.play();
-			
+
 			if (currentValue == sequenceOfColors[count]) { //if the value selected  matches color displayed
-				if (count < round-1) {
+				if (count < round - 1) {
 					count++;
 				} else {
-					count=0;//reseting the count
+					count = 0; //reseting the count
 					round++; //advance round
 					gameStart(); //keep playing
 				}
 			} else {
-				loseAnimation();
+				loseAnimation(); //animation that will be played when the user loses
 				$colors.off('click');
 			}
 		});
@@ -104,10 +117,10 @@
 			}
 			count++; //count controls the flow of the game when compared to the round number.
 
-			if (count < round) {//when the count is less than round
-				gameStart();//we go back and execute the game again for the next color
+			if (count < round) { //when the count is less than round
+				gameStart(); //we go back and execute the game again for the next color
 			} else {
-				gameContinue();//we are ready for user input
+				gameContinue(); //we are ready for user input
 			}
 
 		}, 1000);
@@ -134,14 +147,15 @@
 	function gameContinue() {
 		$message.text('Repeat what you just saw.');
 		$round.text('Current round: ' + round);
-		count = 0; //restarting to 0 to keep following the sequence
 		checkClicked();
+		count = 0; //restarting to 0 to keep following the sequence
 	}
 	//click for the button
 	$btn.click(function() {
+		//startAnimation();
 		$btn.hide();
 		createSequence(); //call function to create the sequence just once
 		gameStart();
 
 	});
-// });
+});
