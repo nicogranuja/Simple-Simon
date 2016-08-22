@@ -11,6 +11,7 @@ $(document).ready(function() {
 	var $round = $('#currentRound');
 	var $colors = $('.color');
 	var $divColors = $('#divColors');
+	var arr = [$red,$yellow,$blue,$green];
 	//*jquery variables
 	var maxLevel = 50; //level at which the sequence is pre-generated
 	var sequenceOfColors = []; //array that will hold the things in order
@@ -19,12 +20,19 @@ $(document).ready(function() {
 
 
 	//-----------------//end variables//--------------------------
+	//animation 'bounce' played at the beginning of the game
 	function startAnimation() {
-		$red.animate({
-
-		}, 1000).animate({
-
-		}, 1000);
+		for(var i=0; i < arr.length; i++){
+			arr[i].animate({
+				bottom: '80px'
+			}, 430).animate({
+				bottom:'0px'
+			}, 430).animate({
+				bottom:'40px'
+			}, 520).animate({
+				bottom:'0px'
+			}, 520);
+		}
 	}
 	//lose animation when the game ends
 	function loseAnimation() {
@@ -152,7 +160,7 @@ $(document).ready(function() {
 	}
 	//click for the button
 	$btn.click(function() {
-		//startAnimation();
+		startAnimation();
 		$btn.hide();
 		createSequence(); //call function to create the sequence just once
 		gameStart();
