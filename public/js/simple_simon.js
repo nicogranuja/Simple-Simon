@@ -1,4 +1,4 @@
-$(document).ready(function() {
+// $(document).ready(function() {
 	"use strict";
 	//variables for the game
 	//*jquery variables
@@ -60,18 +60,13 @@ $(document).ready(function() {
 			//light and play audio
 			lightColor(lightThisOne, 300);
 			audio.play();
-
 			
-			console.log("current value"+ currentValue);
 			if (currentValue == sequenceOfColors[count]) { //if the value selected  matches color displayed
-				if (count < round - 1) {
-					checkClicked(); //run again
-					console.log("inside condition repeat");
+				if (count < round-1) {
 					count++;
 				} else {
-					count=0;
+					count=0;//reseting the count
 					round++; //advance round
-					console.log("game start again");
 					gameStart(); //keep playing
 				}
 			} else {
@@ -139,8 +134,8 @@ $(document).ready(function() {
 	function gameContinue() {
 		$message.text('Repeat what you just saw.');
 		$round.text('Current round: ' + round);
-		checkClicked();
 		count = 0; //restarting to 0 to keep following the sequence
+		checkClicked();
 	}
 	//click for the button
 	$btn.click(function() {
@@ -149,4 +144,4 @@ $(document).ready(function() {
 		gameStart();
 
 	});
-});
+// });
