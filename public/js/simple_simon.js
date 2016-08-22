@@ -63,13 +63,15 @@ $(document).ready(function() {
 		// console.log($(this).attr('value'));
 		var currentValue = $(this).attr('value');
 		var lightThisOne = "#" + $(this).attr('id');
+		var audio = new Audio('Sounds/'+currentValue+'.mp3');
 		lightColor(lightThisOne, 300);
+		audio.play();
 
 		console.log("round is "+round);
 		console.log("coutn is "+count);
-		index = round-1;
+		var i = 0;
 		//coutndown will take care of knowing how many times this has to go through
-		if(currentValue == sequenceOfColors[index]){//if the value selected  matches color displayed
+		if(currentValue == sequenceOfColors[index-1]){//if the value selected  matches color displayed
 			if(count < round-1){
 				checkClicked();//run again
 				console.log("inside condition repeat");
@@ -77,14 +79,17 @@ $(document).ready(function() {
 			}
 			else{
 				clearInterval(intervalGame);
-				round++;//advance//leave this one increment round at the end.
 				gameStart();//keep playing
+				round++;//advance//leave this one increment round at the end.
 				return;
 			}
 		}
 		else{
+			console.log("the sequence"+ sequenceOfColors);
+			console.log("you clicked "+ currentValue+ " color in the sequence is: "+ sequenceOfColors[index]);
 			console.log("end game");
 			loseAnimation();
+			$colors.off('click');
 			}
 		});			
 	}
