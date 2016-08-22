@@ -27,8 +27,27 @@ $(document).ready(function() {
 	//test variables
 	var index = round-1;
 	var times = 0;
+	
 	//-----------------//end variables//--------------------------
-
+	function loseAnimation(){
+		var delay = 700;
+		var localCount = 2;//will run twice the animation
+		var localInterval = setInterval(function(){
+			lightColor('#red', delay);
+			lightColor('#blue', delay);
+			lightColor('#yellow', delay);
+			lightColor('#green', delay);
+			localCount--;
+			if(localCount==0){//after two times 
+				var audio = new Audio('Sounds/lose.mp3');//lose audio
+				$message.text('You Lose :(');
+				$round.text('In round'+round);
+				audio.play();	
+				clearInterval(localInterval);
+			}
+		}, 1000);
+		
+	}
 	//function that clears the buttons
 	function lightColor(color, delay) {
 		$(color).animate({
@@ -65,7 +84,7 @@ $(document).ready(function() {
 		}
 		else{
 			console.log("end game");
-			//end the game
+			loseAnimation();
 			}
 		});			
 	}
