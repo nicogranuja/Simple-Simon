@@ -15,9 +15,9 @@ $(document).ready(function() {
 	var maxLevel = 50; //level at which the sequence is pre-generated
 	var sequenceOfColors = []; //array that will hold the things in order
 	var count = 0; //counts the number of rounds and controls the array depending on round level
-	var round = 1;
-	var intervalGame; //interval that takes care of the timming between color selection from the game.
-	var index = round - 1;
+	var round = 1;//initial round
+	
+
 	//-----------------//end variables//--------------------------
 
 	//lose animation when the game ends
@@ -61,17 +61,18 @@ $(document).ready(function() {
 			lightColor(lightThisOne, 300);
 			audio.play();
 
-			//coutndown will take care of knowing how many times this has to go through
-			if (currentValue == sequenceOfColors[index - 1]) { //if the value selected  matches color displayed
+			
+			console.log("current value"+ currentValue);
+			if (currentValue == sequenceOfColors[count]) { //if the value selected  matches color displayed
 				if (count < round - 1) {
 					checkClicked(); //run again
 					console.log("inside condition repeat");
 					count++;
 				} else {
-					clearInterval(intervalGame);
+					count=0;
+					round++; //advance round
+					console.log("game start again");
 					gameStart(); //keep playing
-					round++; //advance//leave this one increment round at the end.
-					return;
 				}
 			} else {
 				loseAnimation();
@@ -83,9 +84,8 @@ $(document).ready(function() {
 	function lightSequence() {
 		setTimeout(function() {
 			//variable that hold the correspondent sound for each color
-			var audio = new Audio('Sounds/' + sequenceOfColors[index] + '.mp3');
-
-			switch (sequenceOfColors[index]) {
+			var audio = new Audio('Sounds/' + sequenceOfColors[count] + '.mp3');
+			switch (sequenceOfColors[count]) {
 				//for each case change the color and play the sound
 				case 1:
 					lightColor('#red', 300);
@@ -107,8 +107,6 @@ $(document).ready(function() {
 					console.log("dang it default on the swtich");
 					break;
 			}
-			
-			index++; //we need the index to keep changing so the next rounds the array is traversed
 			count++; //count controls the flow of the game when compared to the round number.
 
 			if (count < round) {//when the count is less than round
@@ -126,6 +124,8 @@ $(document).ready(function() {
 			var random = Math.floor(Math.random() * 4) + 1; //create a random number from 1 to 4
 			sequenceOfColors.push(random); //save the random value in the array.
 		}
+		console.log(sequenceOfColors);
+
 	}
 	//function that the program uses for creating the random order of color
 	function gameStart() {
@@ -134,7 +134,6 @@ $(document).ready(function() {
 		$round.text('Current round: ' + round);
 		lightSequence(); //light the sequence just generated
 
-		//count=0;//???
 	}
 	//function that takes the user input and compares it with the sequence to see if its right. 
 	function gameContinue() {
@@ -142,7 +141,6 @@ $(document).ready(function() {
 		$round.text('Current round: ' + round);
 		checkClicked();
 		count = 0; //restarting to 0 to keep following the sequence
-
 	}
 	//click for the button
 	$btn.click(function() {
