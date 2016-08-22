@@ -29,12 +29,6 @@ $(document).ready(function() {
 	var times = 0;
 	//-----------------//end variables//--------------------------
 
-
-	//function that will run something an x number of times incrementing by one
-	function runXtimes(){
-		times++;
-		return times;//returns 0 first time its called then it will be 1 and so on.
-	}
 	//function that clears the buttons
 	function lightColor(color, delay) {
 		$(color).animate({
@@ -45,65 +39,62 @@ $(document).ready(function() {
 	}
 	//function that checks the user input
 	function checkClicked() {
+		var countDown=round;
 		$colors.click(function(e){
-			// console.log($(this).attr('value'));
-			var currentValue = $(this).attr('value');
-			var lightThisOne = "#" + $(this).attr('id');
-			lightColor(lightThisOne, 300);
+		// console.log($(this).attr('value'));
+		var currentValue = $(this).attr('value');
+		var lightThisOne = "#" + $(this).attr('id');
+		lightColor(lightThisOne, 300);
 
-			console.log("round is "+round);
-			console.log("coutn is "+count);
-			index = round-1;
-			
-			if(currentValue == sequenceOfColors[index]){//if the value selected  matches color displayed
-				index++;//index incrementing moved here.
-				console.log("you clicked right");
-				//***********Condition that I need to fix so the program runs 1 time then 2 times and so on
-				//may be add a settimeout to give the user some time to enter
-				//and use the time out.
-				//setTimeout()
-
-				if(count < round-1){//runxTimes will be 1 so we dont run this the first time..  next time once, and so on.
-					//setTimeout(function(){//time out here didnt work try outside the click function.
-						//we just need to fix the waiting time between the user clicks 
-					checkClicked();//run again
-					
-					//},3000);
-					console.log("inside condition repeat");
-					count++;
-				}
-				else{
-					round++;//advance//leave this one increment round at the end.
-					gameStart();//keep playing
-				}
+		console.log("round is "+round);
+		console.log("coutn is "+count);
+		index = round-1;
+		//coutndown will take care of knowing how many times this has to go through
+		if(currentValue == sequenceOfColors[index]){//if the value selected  matches color displayed
+			if(count < round-1){
+				checkClicked();//run again
+				console.log("inside condition repeat");
+				count++;
 			}
 			else{
-				console.log("end game");
-				//end the game
+				clearInterval(intervalGame);
+				round++;//advance//leave this one increment round at the end.
+				gameStart();//keep playing
+				return;
 			}
-		});
+		}
+		else{
+			console.log("end game");
+			//end the game
+			}
+		});			
 	}
 	//function that light the sequence that is randomly generated
 	function lightSequence() {
 		setTimeout(function(){ 
+			var audio = new Audio('Sounds/'+sequenceOfColors[index]+'.mp3');
 			
 			console.log(index+" index");
 			switch (sequenceOfColors[index]) {
 				//probably need to add a pause between each pressed to give the user time.
 				case 1:
 					lightColor('#red', 300);
+					audio.play();
 					console.log("red");
 					break;
 				case 2:
 					lightColor('#blue', 300);
+					audio.play();
 					console.log("blue");					
 					break;
 				case 3:
 					lightColor('#green', 300);
+					audio.play();
 					console.log("green");
 					break;
 				case 4:
 					lightColor('#yellow', 300);
+					audio.play();
 					console.log("yellow");
 					break;
 				default:
@@ -135,6 +126,7 @@ $(document).ready(function() {
 	}
 	//function that the program uses for creating the random order of color
 	function gameStart() {
+		$colors.off('click');//condition that takes care of the user not clicking buttons when the game is running
 		$message.text('Watch the sequence.');
 		$round.text('Current round: ' + round);
 		lightSequence(); //light the sequence just generated
@@ -145,7 +137,7 @@ $(document).ready(function() {
 	function gameContinue() {
 		$message.text('Repeat what you just saw.');
 		$round.text('Current round: ' + round);
-		checkClicked();//checks the user click
+		checkClicked();
 		count=0; //restarting to 0 to keep following the sequence
 
 	}
